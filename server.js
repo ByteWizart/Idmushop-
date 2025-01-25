@@ -31,6 +31,11 @@ app.use(session({
   cookie: { secure: false } // Defina como 'true' em produção com HTTPS
 }));
 
+// Rota para a página inicial
+app.get('/', (req, res) => {
+  res.send('Bem-vindo à página inicial!');
+});
+
 // Função para gerar o link de verificação (com base no token)
 function generateVerificationLink(email, verificationToken) {
   return `http://localhost:${port}/verify-email/${verificationToken}`;
@@ -273,85 +278,6 @@ app.post('/login', (req, res) => {
         <div class="container">
           <h1>Login Bem-sucedido!</h1>
           <p class="welcome">Bem-vindo, ${email}!</p>
-        </div>
-      </body>
-    </html>
-  `);
-});
-
-// Página de login
-app.get('/login', (req, res) => {
-  res.send(`
-    <html>
-      <head>
-        <style>
-          body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f7fc;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-          }
-
-          .container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            width: 100%;
-            max-width: 500px;
-          }
-
-          h1 {
-            font-size: 2em;
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-          }
-
-          label {
-            font-size: 1.1em;
-            color: #333;
-          }
-
-          input[type="email"], input[type="password"] {
-            padding: 10px;
-            font-size: 1em;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 15px;
-          }
-
-          input[type="submit"] {
-            padding: 12px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.1em;
-            cursor: pointer;
-          }
-
-          input[type="submit"]:hover {
-            background-color: #0056b3;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <h1>Login</h1>
-          <form action="/login" method="POST">
-            <label for="email">E-mail:</label><br>
-            <input type="email" id="email" name="email" required><br><br>
-            <label for="password">Senha:</label><br>
-            <input type="password" id="password" name="password" required><br><br>
-            <input type="submit" value="Entrar">
-          </form>
         </div>
       </body>
     </html>

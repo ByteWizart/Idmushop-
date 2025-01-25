@@ -46,12 +46,13 @@ app.post("/register", (req, res) => {
     text: `Obrigado por se registrar! Clique no link abaixo para verificar sua conta:\n\nhttps://seusite.com/verify?email=${email}`,
   };
 
+  // Envio do e-mail com captura de erro detalhado
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.error("Erro ao enviar o e-mail:", error);
-      res.status(500).send("Erro ao enviar o e-mail.");
+      console.error("Erro ao enviar o e-mail:", error); // Log do erro completo
+      res.status(500).send("Erro ao enviar o e-mail. Verifique os logs para mais detalhes.");
     } else {
-      console.log("E-mail enviado:", info.response);
+      console.log("E-mail enviado com sucesso:", info.response);
       res.send("E-mail enviado! Verifique sua caixa de entrada.");
     }
   });

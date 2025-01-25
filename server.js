@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
   secure: false, // False porque não estamos usando a porta 465
   auth: {
     user: "kaiovitorpg@gmail.com", // Seu e-mail
-    pass: "dohl geth najb grcy", // Senha do app ou senha do Outlook
+    pass: "lxrv ckmu mret xjhk", // Senha do app ou senha do Outlook
   },
 });
 

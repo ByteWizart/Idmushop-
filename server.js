@@ -45,44 +45,44 @@ const htmlContent = `
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       max-width: 400px;
-      text-align: center;
+      text-align: center.
     }
     h1 {
       margin-bottom: 20px;
-      color: #444;
+      color: #444.
     }
     form {
       display: flex;
-      flex-direction: column;
+      flex-direction: column.
     }
     input {
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
+      padding: 10px.
+      margin: 10px 0.
+      border: 1px solid #ccc.
+      border-radius: 5px.
+      font-size: 16px.
     }
     button {
-      padding: 10px;
-      background: #f6d365;
-      border: none;
-      border-radius: 5px;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s ease;
+      padding: 10px.
+      background: #f6d365.
+      border: none.
+      border-radius: 5px.
+      color: #fff.
+      font-size: 16px.
+      cursor: pointer.
+      transition: background 0.3s ease.
     }
     button:hover {
-      background: #f3a683;
+      background: #f3a683.
     }
     .link {
-      margin-top: 10px;
-      color: #f6d365;
-      cursor: pointer;
-      text-decoration: underline;
+      margin-top: 10px.
+      color: #f6d365.
+      cursor: pointer.
+      text-decoration: underline.
     }
     .link:hover {
-      color: #f3a683;
+      color: #f3a683.
     }
   </style>
 </head>
@@ -148,6 +148,7 @@ app.post("/login", (req, res) => {
 });
 
 // Inicia o servidor
-app.listen(3000, () => {
-  console.log("Servidor rodando em http://localhost:3000");
+const port = process.env.PORT || 3000;
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Servidor rodando em http://localhost:${port}`);
 });

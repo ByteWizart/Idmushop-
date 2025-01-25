@@ -1,0 +1,24 @@
+var nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'kaiovitorpg@gmail.com',
+    pass: 'dohl geth najb grcy'
+  }
+});
+
+var mailOptions = {
+  from: 'kaiovitorpg@gmail.com',
+  to: 'mateusportelag1@gmail.com',
+  subject: 'Verifique sua conta no idmushop!',
+  text: 'That was easy!'
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+  }
+});

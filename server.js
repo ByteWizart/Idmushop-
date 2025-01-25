@@ -1,65 +1,107 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const nodemailer = require("nodemailer");
+const express = require('express');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+const bodyParser = require('body-parser');
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
+const port = 3000;
+
+// Banco de dados em memória (substitua por um banco de dados real)
+const users = {};
 
 // Configuração do Nodemailer
 const transporter = nodemailer.createTransport({
-  host: "smtp.office365.com", // SMTP do Outlook
-  port: 587, // Porta correta para TLS
-  secure: false, // False porque não estamos usando a porta 465
+  service: 'gmail',
   auth: {
-    user: "kaiovitorpg@gmail.com", // Seu e-mail
-    pass: "lxrv ckmu mret xjhk", // Senha do app ou senha do Outlook
-  },
-});
-
-// Teste de conexão do transporter
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("Erro na configuração do SMTP:", error);
-  } else {
-    console.log("Servidor SMTP configurado corretamente:", success);
+    user: 'kaiovitorpg@gmail.com', // Seu e-mail
+    pass: 'mopd achb tgoy ldcz' // Sua senha de aplicativo do Gmail
   }
 });
 
-// Rota para servir o formulário
-app.get("/", (req, res) => {
+// Middleware para lidar com os dados da requisição
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Função para enviar o e-mail de verificação
+function sendVerificationEmail(email, verificationToken) {
+  const verificationLink = `http://localhost:${port}/verify-email/${verificationToken}`;
+  const mailOptions = {
+    from: 'kaiovitorpg@gmail.com',
+    to: email,
+    subject: 'Verificação de E-mail',
+    text: `Clique no link para verificar seu e-mail: ${verificationLink}`
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log('Erro ao enviar o e-mail:', error);
+    } else {
+      console.log('E-mail de verificação enviado: ' + info.response);
+    }
+  });
+}
+
+// Rota para o registro do usuário
+app.post('/register', (req, res) => {
+  const { email, password } = req.body;
+
+  // Verifica se o usuário já existe
+  if (users[email]) {
+    return res.status(400).send('Usuário já registrado');
+  }
+
+  // Gera um token de verificação único
+  const verificationToken = crypto.randomBytes(20).toString('hex');
+  
+  // Armazena o usuário com o token de verificação e status de verificação
+  users[email] = {
+    password: password,
+    isVerified: false,
+    verificationToken: verificationToken
+  };
+
+  // Envia o e-mail de verificação
+  sendVerificationEmail(email, verificationToken);
+
+  res.send('Registro bem-sucedido! Verifique seu e-mail para ativar sua conta.');
+});
+
+// Rota para verificar o e-mail
+app.get('/verify-email/:token', (req, res) => {
+  const { token } = req.params;
+
+  // Encontra o usuário com o token de verificação
+  const user = Object.values(users).find(user => user.verificationToken === token);
+
+  if (!user) {
+    return res.status(400).send('Token inválido ou expirado');
+  }
+
+  // Marca o usuário como verificado
+  user.isVerified = true;
+
+  res.send('E-mail verificado com sucesso! Sua conta agora está ativa.');
+});
+
+// Página inicial (rota para retornar a página HTML com o formulário de registro)
+app.get('/', (req, res) => {
   res.send(`
-    <form action="/register" method="POST">
-      <input type="email" name="email" placeholder="Digite seu e-mail" required>
-      <button type="submit">Registrar</button>
-    </form>
+    <html>
+      <body>
+        <h1>Registro de Usuário</h1>
+        <form action="/register" method="POST">
+          <label for="email">E-mail:</label><br>
+          <input type="email" id="email" name="email" required><br><br>
+          <label for="password">Senha:</label><br>
+          <input type="password" id="password" name="password" required><br><br>
+          <input type="submit" value="Registrar">
+        </form>
+      </body>
+    </html>
   `);
 });
 
-// Rota para envio de e-mail
-app.post("/register", (req, res) => {
-  const { email } = req.body;
-
-  const mailOptions = {
-    from: "kaiovitorpg@gmail.com", // O e-mail remetente
-    to: email, // E-mail do destinatário
-    subject: "Verifique sua conta!",
-    text: `Obrigado por se registrar! Clique no link abaixo para verificar sua conta:\n\nhttps://seusite.com/verify?email=${email}`,
-  };
-
-  // Envio do e-mail com captura de erro detalhado
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error("Erro ao enviar o e-mail:", error); // Log do erro completo
-      res.status(500).send("Erro ao enviar o e-mail. Verifique os logs para mais detalhes.");
-    } else {
-      console.log("E-mail enviado com sucesso:", info.response);
-      res.send("E-mail enviado! Verifique sua caixa de entrada.");
-    }
-  });
-});
-
 // Inicia o servidor
-const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
+  console.log(`Servidor rodando em http://localhost:${port}`);
 });

@@ -1,19 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
-require("dotenv").config();
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Configuração do Nodemailer (utilizando variáveis de ambiente)
+// Configuração do Nodemailer com credenciais diretamente no código
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST, // Host do SMTP
+  host: "smtp.office365.com", // Substitua pelo host do SMTP que você está usando
   port: 587, // Porta para TLS
   secure: false, // Use "true" para a porta 465
   auth: {
-    user: process.env.SMTP_USER, // Seu e-mail
-    pass: process.env.SMTP_PASS, // Sua senha ou senha de aplicativo
+    user: "kaiovitorpg@gmail.com", // Seu e-mail
+    pass: "dohl geth najb grcy", // Sua senha ou senha de aplicativo
   },
 });
 
@@ -123,7 +122,7 @@ app.post("/register", (req, res) => {
   const { email } = req.body;
 
   const mailOptions = {
-    from: process.env.SMTP_USER,
+    from: "kaiovitorpg@gmail.com",
     to: email,
     subject: "Verifique sua conta!",
     text: `Obrigado por se registrar! Clique no link abaixo para verificar sua conta:\n\nhttps://seusite.render.com/verify?email=${email}`,

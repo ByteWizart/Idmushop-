@@ -125,7 +125,7 @@ app.post("/register", (req, res) => {
     from: "kaiovitorpg@gmail.com",
     to: email,
     subject: "Verifique sua conta!",
-    text: `Obrigado por se registrar! Clique no link abaixo para verificar sua conta:\n\nhttps://seusite.render.com/verify?email=${email}`,
+    text: `Obrigado por se registrar! Clique no link abaixo para verificar sua conta:\n\nhttps://idmushop.onrender.com/verify?email=${email}`,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
